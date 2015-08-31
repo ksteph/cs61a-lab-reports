@@ -2,10 +2,53 @@ import re
 import datetime
 
 class DataReader(object):
+    class DataSet(list):
+        def group_by(self, key_function):
+            '''
+                Similar to the semantics of spark
+
+                Input: key
+
+                Output: An new dataset of grouped data points based on key
+            '''
+            result = {}
+            for item in self:
+                key = key_function(item)
+                if result.has_key(key):
+                    result[key].append(item)
+                else:
+                    result[key] = [item]
+            return DataReader.DataSet([(key, result[key]) for key in result])
+
+        def get_element_count(self, key):
+            '''
+                Get a count number of distinct values for a given key
+
+                Input: key
+
+                Output: An integer of the number of distinct values. -1 if the key if wrong or data_set.
+            '''
+            if len(self) == 0:
+                return 0
+            if not self[0].has_key(key):
+                return -1
+            tem_value_list  = [item[key] for item in self]
+            return len(set(tem_value_list))
+
+        def sort_by(self, sort_func):
+            '''
+                Sort the dataset by given function
+
+                Input: sorting function
+
+                Output: A new dataset of sorted results
+            '''
+            return DataReader.DataSet(sorted(self, sort_func))
+
     def __init__(self, data_base_directory, lab):
         self.DATA_FILE_PATH = data_base_directory + '/{}.dat'.format(lab)
         self.MAP_FILE_PATH = data_base_directory + '/{}_caseId_str2numId.map'.format(lab)
-        self.data_set = []
+        self.data_set = DataReader.DataSet()
         self.sub_map = {}
         self.name_map = {}
 
@@ -16,9 +59,9 @@ class DataReader(object):
 
     def _sort_map(self):
         '''
-        Read the map file. Make specifiers ordered and give a map between question name and specifier.
+            Read the map file. Make specifiers ordered and give a map between question name and specifier.
 
-        Input: Map file
+            Input: Map file
         '''
         map_items = []
         with open(self.MAP_FILE_PATH, 'r') as f_in:
