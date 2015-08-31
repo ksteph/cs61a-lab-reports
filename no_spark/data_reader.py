@@ -45,6 +45,24 @@ class DataReader(object):
             '''
             return DataReader.DataSet(sorted(self, key=sort_func))
 
+        def count(self):
+            '''
+                Return the total number of elements in dataset
+
+                Output: interger
+            '''
+            return len(self)
+
+        def filter_by(self, filter_func):
+            '''
+                Return a filtered dataset based on filter_func
+                Semantics are similar to spark
+
+                Input: filter function
+
+                Output: filtered dataset
+            '''
+            return DataReader.DataSet(filter(filter_func, self))
     def __init__(self, data_base_directory, lab):
         self.DATA_FILE_PATH = data_base_directory + '/{}.dat'.format(lab)
         self.MAP_FILE_PATH = data_base_directory + '/{}_caseId_str2numId.map'.format(lab)

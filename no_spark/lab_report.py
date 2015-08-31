@@ -22,9 +22,9 @@ data_set = data.data_set
 #########################
 NUM_STUDENT = data_set.get_element_count('student')
 NUM_QUESTION = data_set.get_element_count('specifier')
-NUM_SUBMISSION = len(data_set)
+NUM_SUBMISSION = data_set.count()
 NUM_DISTINCT_ANSWER = data_set.get_element_count('answer')
-NUM_WRONG_ANSWER = len(filter(lambda x: not x['result'], data_set))
+NUM_WRONG_ANSWER = data_set.filter_by(lambda x: not x['result']).count()
 
 ######################################
 ### Number of sessions per student ###
