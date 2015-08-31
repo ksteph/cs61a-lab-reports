@@ -43,7 +43,7 @@ class DataReader(object):
 
                 Output: A new dataset of sorted results
             '''
-            return DataReader.DataSet(sorted(self, sort_func))
+            return DataReader.DataSet(sorted(self, key=sort_func))
 
     def __init__(self, data_base_directory, lab):
         self.DATA_FILE_PATH = data_base_directory + '/{}.dat'.format(lab)
