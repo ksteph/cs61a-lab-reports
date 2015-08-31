@@ -1,4 +1,5 @@
 import sys
+import numpy as np
 
 import data_reader
 import toolkit
@@ -39,6 +40,26 @@ for item in tem_data:
     else:
         session_counter[session_cnt] += 1
 
+########################################
+### Number of submissions per prompt ###
+########################################
+submission_counter = [0] * NUM_QUESTION
+for prompt in range(NUM_QUESTION):
+    submission_counter[prompt] = data_set.filter_by(lambda x: x['specifier']==prompt).count()
+
 #################################################
-### Generate number of submissions per prompt ###
+### Number of unique wrong answers per prompt ###
 #################################################
+unique_answer_counter = [0] * NUM_QUESTION
+for prompt in range(NUM_QUESTION):
+    unique_answer_counter[prompt] = data_set.filter_by(lambda x: x['specifier']==prompt and not x['result']).get_element_count('answer')
+
+#####################################
+### Number of attempts per prompt ###
+#####################################
+attempt_counter = [[0 for i in xrange(10)] for j in xrange(NUM_QUESTION)]
+for prompt in range(NUM_QUESTION):
+    tem_data = data_set.filter_by(lambda x: x['specifier']==prompt)
+    tem_data = tem_data.group_by(lambda x: x['student']).map(lambda x: len(x[1]))
+    for item in tem_data:
+        attempt_counter[prompt][np.min([item-1, 9])] += 1

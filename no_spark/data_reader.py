@@ -63,6 +63,17 @@ class DataReader(object):
                 Output: filtered dataset
             '''
             return DataReader.DataSet(filter(filter_func, self))
+
+        def map(self, map_func):
+            '''
+                Semantics are similar to spark
+
+                Input: map function
+
+                Output: dataset after applying map function for each item
+            '''
+            return DataReader.DataSet([map_func(item) for item in self])
+            
     def __init__(self, data_base_directory, lab):
         self.DATA_FILE_PATH = data_base_directory + '/{}.dat'.format(lab)
         self.MAP_FILE_PATH = data_base_directory + '/{}_caseId_str2numId.map'.format(lab)
