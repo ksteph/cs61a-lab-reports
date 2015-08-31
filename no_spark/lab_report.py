@@ -1,5 +1,6 @@
 import sys
 import numpy as np
+import datetime
 
 import data_reader
 import toolkit
@@ -63,3 +64,25 @@ for prompt in range(NUM_QUESTION):
     tem_data = tem_data.group_by(lambda x: x['student']).map(lambda x: len(x[1]))
     for item in tem_data:
         attempt_counter[prompt][np.min([item-1, 9])] += 1
+
+
+#################################
+### Generate time information ###
+#################################
+selected_data = data_set.sort_by(lambda x: x['a_time'])
+start_time = selected_data[0]['a_time']
+end_time = selected_data[-1]['a_time']
+tem_lmt = start_time
+buckets = []
+while tem_lmt < end_time:
+    tem_lmt += datetime.timedelta(0, 3600)
+    buckets.append(tem_lmt)
+
+time_info_counter = [[0 for j in range(len(buckets))] for i in range(NUM_QUESTION)]
+for prompt in range(NUM_QUESTION):
+    tem_data = data_set.filter_by(lambda x: x['specifier']==prompt)
+    for item in tem_data.map(lambda x: x['a_time']):
+        for index in range(len(buckets)):
+            if item < buckets[index]:
+                break
+        time_info_counter[prompt][index] += 1
