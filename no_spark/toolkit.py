@@ -1,4 +1,5 @@
 import datetime
+import matplotlib.pyplot as plt
 
 SESSION_THRESHOLD = datetime.timedelta(0, 30 * 60)
 
@@ -46,3 +47,30 @@ def get_time_information(item_list):
         result += a_time - tem_max
         tem_max = a_time
     return result
+
+def prepare_plot(figsize=(8.5, 4), hideLabels=False, gridColor='#999999', gridWidth=1.0):
+    '''
+        Template to generate plot figure
+    '''
+    plt.close()
+    fig, ax = plt.subplots(figsize=figsize, facecolor='white', edgecolor='white')
+    ax.set_frame_on(True)
+    # ax.lines[0].set_visible(False)
+    ax.yaxis.set_ticks_position('none')
+    ax.xaxis.set_ticks_position('none')
+    # ax.get_yaxis().set_visible(False)
+    ax.axes.tick_params(labelcolor='black', labelsize='10')
+    plt.grid(color=gridColor, linewidth=gridWidth, linestyle='-')
+    # plt.gcf().subplots_adjust(bottom=0.5)
+    # map(lambda position: ax.spines[position].set_visible(False), ['bottom', 'top', 'left', 'right'])
+    return fig, ax
+
+def autolabel(rects, ax, h=2, t="{0}"):
+    '''
+        Label the bar chart.
+    '''
+    # attach some text labels
+    for rect in rects:
+        height = rect.get_height()
+        ax.text(rect.get_x()+rect.get_width()/2., height+h, t.format(height),
+                ha='center', va='bottom', color="black")
