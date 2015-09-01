@@ -1,0 +1,104 @@
+\documentclass[12pt]{article} % use larger type; default would be 10pt
+\usepackage[margin=1in]{geometry} % to change the page dimensions
+         % otherwise the current date is printed
+%\usepackage{times}
+\usepackage{times}
+\usepackage{fancyhdr}
+\usepackage{xspace}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{verbatim}
+
+\pagestyle{fancy}
+\lhead{Kristin Stephens}
+\rhead{\thepage}
+%\cfoot{}
+
+\begin{document}
+\special{papersize=8.5in,11in}
+\setlength{\pdfpageheight}{\paperheight}
+\setlength{\pdfpagewidth}{\paperwidth}
+\setlength{\parindent}{0pt} %Remove indent of all but first paragraph
+\setlength{\parskip}{2ex} %Add space between paragraphs
+
+\paragraph{Basic Information}
+\begin{center}
+	\begin{tabular}{cc}
+		\toprule
+		Total number of students & {{'{:,}'.format(param_list['NUM_STUDENT'])}} \\\midrule
+		Total number of questions & {{'{:,}'.format(param_list['NUM_QUESTION'])}} \\\midrule
+		Total number of submissions & {{'{:,}'.format(param_list['NUM_SUBMISSION'])}} \\\midrule
+		Total number of distinct answers & {{'{:,}'.format(param_list['NUM_DISTINCT_ANSWER'])}} \\\midrule
+		Total number of wrong submissions & {{'{:,}'.format(param_list['NUM_WRONG_ANSWER'])}}({{param_list['RATIO']}}\%)) \\\bottomrule
+	\end{tabular}
+\end{center}
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.8\textwidth]{session_cnt}
+	\caption{Number of sessions per student}
+\end{figure}
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.8\textwidth]{submission_per_prompt}
+	\caption{Number of submissions per prompt}
+\end{figure}
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.8\textwidth]{unique_answer_per_prompt}
+	\caption{Number of unique wrong answers per prompt}
+\end{figure}
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.8\textwidth]{attempt_cnt}
+	\caption{Number of attempts per prompt}
+\end{figure}
+
+\begin{table}[!ht]
+	\centering
+	\begin{tabular}{ccccccccccc}
+		Prompt ID & 1 & 2  & 3  & 4  & 5  & 6  & 7  & 8  & 9 & $\geq$10 \\\toprule
+		{% for prompt in range(param_list['NUM_QUESTION']) %}
+			{{prompt}} {% for item in param_list['attempt_counter'][prompt] %} & {{item}} {% endfor %} \\\midrule
+		{% endfor %}
+	\end{tabular}
+	\caption{Number of attempts per prompt}
+\end{table}
+
+{% for prompt in range(param_list['NUM_QUESTION'])%}
+\begin{table}[!ht]
+	\centering
+	\begin{tabular}{ccc}
+		Answer & Number of instances & Percentage (\%) \\\toprule
+		{% for item in param_list['wrong_answers_counter'][prompt]%}
+			\verb|{{item[0]}}| & {{item[1]}} & {{'{:.2f}'.format(item[2]*100)}} \\\midrule
+		{% endfor %}
+	\end{tabular}
+	\caption{Common wrong answers for Prompt {{prompt}}}
+\end{table}
+
+\begin{table}[!ht]
+	\centering
+	\begin{tabular}{ccc}
+		Answer & Number of instances & Percentage (\%) \\\toprule
+		{% for item in param_list['first_answers_counter'][prompt]%}
+			\verb|{{item[0]}}| & {{item[1]}} & {{'{:.2f}'.format(item[2]*100)}} \\\midrule
+		{% endfor %}
+	\end{tabular}
+	\caption{Common first wrong answers for Prompt {{prompt}}}
+\end{table}
+\clearpage
+{% endfor %}
+
+{% for prompt in range(param_list['NUM_QUESTION']) %}
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.8\textwidth]{{'{{response_time_{}}}'.format(prompt)}}
+	\caption{Time spent on prompt {{prompt}} per student}
+\end{figure}
+{% endfor %}
+\end{document}
