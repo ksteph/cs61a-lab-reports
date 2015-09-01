@@ -66,9 +66,9 @@ for prompt in range(NUM_QUESTION):
         attempt_counter[prompt][np.min([item-1, 9])] += 1
 
 
-#################################
-### Generate time information ###
-#################################
+########################
+### Time information ###
+########################
 selected_data = data_set.sort_by(lambda x: x['a_time'])
 start_time = selected_data[0]['a_time']
 end_time = selected_data[-1]['a_time']
@@ -86,3 +86,26 @@ for prompt in range(NUM_QUESTION):
             if item < buckets[index]:
                 break
         time_info_counter[prompt][index] += 1
+
+#########################################################
+### Most common wrong answers and first wrong answers ###
+#########################################################
+wrong_answers_counter = [[] for i in range(NUM_QUESTION)]
+first_answers_counter = [[] for i in range(NUM_QUESTION)]
+tem_data_set = data_set.filter_by(lambda x: not x['result'])
+for prompt in range(NUM_QUESTION):
+    selected_data = tem_data_set.filter_by(lambda x: x['specifier']==prompt)
+    selected_data = selected_data.group_by(lambda x: x['answer']).map(lambda x: (x[0], len(x[1])))
+    selected_data = selected_data.sort_by(lambda x: -x[1])
+    if selected_data.count() > 10:
+        wrong_answers_counter[prompt] = selected_data[:10]
+    else:
+        wrong_answers_counter[prompt] = selected_data
+
+    selected_data = tem_data_set.sort_by(lambda x: x['a_time']).group_by(lambda x: x['student']).map(lambda x: x[1][0])
+    selected_data = selected_data.group_by(lambda x: x['answer']).map(lambda x: (x[0], len(x[1])))
+    selected_data = selected_data.sort_by(lambda x: -x[1])
+    if selected_data.count() > 10:
+        first_answers_counter[prompt] = selected_data[:10]
+    else:
+        first_answers_counter[prompt] = selected_data
