@@ -1,6 +1,8 @@
 import sys
 import numpy as np
 import datetime
+import os
+import matplotlib.plot as plt
 
 import data_reader
 import toolkit
@@ -13,6 +15,9 @@ def usage_information():
 if len(sys.argv) < 3:
     print usage_information()
 
+os.chdir('../report')
+if not os.path.exists(sys.argv[2]):
+    os.makedirs('{}_report'.format(sys.argv[2]))
 ################
 ### Get data ###
 ################
