@@ -1,5 +1,7 @@
 import datetime
 import matplotlib.pyplot as plt
+import jinja2
+from subprocess import call
 
 SESSION_THRESHOLD = datetime.timedelta(0, 30 * 60)
 
@@ -74,3 +76,18 @@ def autolabel(rects, ax, h=2, t="{0}"):
         height = rect.get_height()
         ax.text(rect.get_x()+rect.get_width()/2., height+h, t.format(height),
                 ha='center', va='bottom', color="black")
+
+class LatexFormatter(object):
+    def __init__(self, template_path):
+        templateLoader = jinja2.FileSystemLoader(searchpath=template_path)
+        self.env = jinja2.Environment(loader=templateLoader)
+        self.template = self.env.get_template('report.tex')
+        self.param_list = {}
+
+    def set_param(self, key, value):
+        self.param_list[key] = value
+
+    def render(self, file_name):
+        with open(file_name, 'w') as f_out:
+            f_out.write(self.template.render(param_list=self.param_list))
+        call(['pdflatex', file_name])

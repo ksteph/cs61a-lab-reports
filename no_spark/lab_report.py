@@ -21,22 +21,32 @@ os.chdir('../report')
 if not os.path.exists('{}_report'.format(sys.argv[2])):
     os.makedirs('{}_report'.format(sys.argv[2]))
 os.chdir('./{}_report'.format(sys.argv[2]))
-
 ################
 ### Get data ###
 ################
 data = data_reader.SetupData(sys.argv[1], sys.argv[2])
 data_set = data.data_set
 
+##################################
+### Initialize latex formatter ###
+##################################
+formatter = toolkit.LatexFormatter(os.getcwd()+'/../template/')
+# formatter.set_param('name_map', data.name_map)
+
 #########################
 ### Basic information ###
 #########################
 NUM_STUDENT = data_set.get_element_count('student')
+formatter.set_param('NUM_STUDENT', NUM_STUDENT)
 NUM_QUESTION = data_set.get_element_count('specifier')
+formatter.set_param('NUM_QUESTION', NUM_QUESTION)
 NUM_SUBMISSION = data_set.count()
+formatter.set_param('NUM_SUBMISSION', NUM_SUBMISSION)
 NUM_DISTINCT_ANSWER = data_set.get_element_count('answer')
+formatter.set_param('NUM_DISTINCT_ANSWER', NUM_DISTINCT_ANSWER)
 NUM_WRONG_ANSWER = data_set.filter_by(lambda x: not x['result']).count()
-
+formatter.set_param('NUM_WRONG_ANSWER', NUM_WRONG_ANSWER)
+formatter.set_param('RATIO', '{:.2f}'.format(NUM_WRONG_ANSWER*100/float(NUM_SUBMISSION)))
 ######################################
 ### Number of sessions per student ###
 ######################################
@@ -124,6 +134,7 @@ plt.xlabel('Prompt ID')
 plt.gcf().subplots_adjust(right=0.8)
 plt.legend(p, (x+1 for x in range(10)), loc='center left', bbox_to_anchor=(1, 0.5))
 plt.savefig('attempt_cnt.png')
+formatter.set_param('attempt_counter', attempt_counter)
 
 ########################
 ### Time information ###
@@ -173,20 +184,24 @@ first_answers_counter = [[] for i in range(NUM_QUESTION)]
 tem_data_set = data_set.filter_by(lambda x: not x['result'])
 for prompt in range(NUM_QUESTION):
     selected_data = tem_data_set.filter_by(lambda x: x['specifier']==prompt)
-    selected_data = selected_data.group_by(lambda x: x['answer']).map(lambda x: (x[0], len(x[1])))
+    total_num = selected_data.count()
+    selected_data = selected_data.group_by(lambda x: x['answer']).map(lambda x: (x[0], len(x[1]), len(x[1])/float(total_num)))
     selected_data = selected_data.sort_by(lambda x: -x[1])
     if selected_data.count() > 10:
         wrong_answers_counter[prompt] = selected_data[:10]
     else:
         wrong_answers_counter[prompt] = selected_data
 
-    selected_data = tem_data_set.sort_by(lambda x: x['a_time']).group_by(lambda x: x['student']).map(lambda x: x[1][0])
-    selected_data = selected_data.group_by(lambda x: x['answer']).map(lambda x: (x[0], len(x[1])))
+    selected_data = tem_data_set.filter_by(lambda x: x['specifier']==prompt).sort_by(lambda x: x['a_time']).group_by(lambda x: x['student']).map(lambda x: x[1][0])
+    total_num = selected_data.count()
+    selected_data = selected_data.group_by(lambda x: x['answer']).map(lambda x: (x[0], len(x[1]), len(x[1])/float(total_num)))
     selected_data = selected_data.sort_by(lambda x: -x[1])
     if selected_data.count() > 10:
         first_answers_counter[prompt] = selected_data[:10]
     else:
         first_answers_counter[prompt] = selected_data
+formatter.set_param('wrong_answers_counter', wrong_answers_counter)
+formatter.set_param('first_answers_counter', first_answers_counter)
 
 #################################
 ### Response time information ###
@@ -214,3 +229,8 @@ for prompt in range(NUM_QUESTION):
     plt.xticks([loc+width for loc in ind[:len(ind)-1]], [t/60 for t in RESPONSE_BUCKETS])
     toolkit.autolabel(rects, ax)
     plt.savefig('response_time_{}'.format(prompt))
+
+#########################
+### Render the report ###
+#########################
+formatter.render('{}_report.tex'.format(sys.argv[2]))
