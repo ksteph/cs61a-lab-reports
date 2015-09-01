@@ -27,3 +27,22 @@ def get_session_info(item_list):
         elif a_time > tem_max:
             raise Exception(item)
     return session_cnt
+
+def get_time_information(item_list):
+    '''
+        Get time needed to solve the question
+
+        Input: an ordered list of logs of a student
+
+        Output: total time needed to solve the question
+    '''
+    result = datetime.timedelta(0, 0)
+    tem_max = datetime.datetime.fromtimestamp(0)
+    for item in item_list:
+        a_time = item['a_time']
+        q_time = item['q_time']
+        if q_time > tem_max + SESSION_THRESHOLD:
+            tem_max = q_time
+        result += a_time - tem_max
+        tem_max = a_time
+    return result

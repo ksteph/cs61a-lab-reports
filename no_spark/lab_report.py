@@ -109,3 +109,21 @@ for prompt in range(NUM_QUESTION):
         first_answers_counter[prompt] = selected_data[:10]
     else:
         first_answers_counter[prompt] = selected_data
+
+#################################
+### Response time information ###
+#################################
+RESPONSE_BUCKETS = [60, 120, 300, 600]
+response_time_counter = [[0 for i in range(len(RESPONSE_BUCKETS)+1)] for j in range(NUM_QUESTION)]
+for prompt in range(NUM_QUESTION):
+    selected_data = data_set.filter_by(lambda x: x['specifier']==prompt)
+    selected_data = selected_data.sort_by(lambda x: x['a_time']).group_by(lambda x: x['student'])
+    selected_data = selected_data.map(lambda x: toolkit.get_time_information(x[1]).total_seconds())
+    for item in selected_data:
+        for index in range(len(RESPONSE_BUCKETS)):
+            if item < RESPONSE_BUCKETS[index]:
+                break
+        if index == 3 and item > RESPONSE_BUCKETS[3]:
+            index = 4
+        response_time_counter[prompt][index] += 1
+print response_time_counter
