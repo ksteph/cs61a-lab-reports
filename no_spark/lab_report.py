@@ -31,7 +31,7 @@ data_set = data.data_set
 ### Initialize latex formatter ###
 ##################################
 formatter = toolkit.LatexFormatter(os.getcwd()+'/../template/')
-# formatter.set_param('name_map', data.name_map)
+formatter.set_param('name_map', data.name_map)
 
 #########################
 ### Basic information ###

@@ -22,6 +22,16 @@
 \setlength{\parindent}{0pt} %Remove indent of all but first paragraph
 \setlength{\parskip}{2ex} %Add space between paragraphs
 
+\paragraph{Prompt ID Table}
+\begin{center}
+	\begin{tabular}{cc}
+		Prompt ID & Case ID \\\toprule
+		{% for key in param_list['name_map'] %}
+		{{key}} & \verb|{{param_list['name_map'][key]}}| \\\midrule
+		{% endfor %}
+	\end{tabular}
+\end{center}
+
 \paragraph{Basic Information}
 \begin{center}
 	\begin{tabular}{cc}
