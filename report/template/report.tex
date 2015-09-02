@@ -11,7 +11,7 @@
 \usepackage{verbatim}
 
 \pagestyle{fancy}
-\lhead{Kristin Stephens}
+\lhead{{'{{{} Report}}'.format(param_list['LAB_NAME'])}}
 \rhead{\thepage}
 %\cfoot{}
 
@@ -24,7 +24,7 @@
 
 \paragraph{Prompt ID Table}
 \begin{center}
-	\begin{tabular}{cc}
+	\begin{tabular}{ll}
 		Prompt ID & Case ID \\\toprule
 		{% for key in param_list['name_map'] %}
 		{{key}} & \verb|{{param_list['name_map'][key]}}| \\\midrule
@@ -34,13 +34,13 @@
 
 \paragraph{Basic Information}
 \begin{center}
-	\begin{tabular}{cc}
+	\begin{tabular}{lr}
 		\toprule
 		Total number of students & {{'{:,}'.format(param_list['NUM_STUDENT'])}} \\\midrule
 		Total number of questions & {{'{:,}'.format(param_list['NUM_QUESTION'])}} \\\midrule
 		Total number of submissions & {{'{:,}'.format(param_list['NUM_SUBMISSION'])}} \\\midrule
 		Total number of distinct answers & {{'{:,}'.format(param_list['NUM_DISTINCT_ANSWER'])}} \\\midrule
-		Total number of wrong submissions & {{'{:,}'.format(param_list['NUM_WRONG_ANSWER'])}}({{param_list['RATIO']}}\%)) \\\bottomrule
+		Total number of wrong submissions & {{'{:,}'.format(param_list['NUM_WRONG_ANSWER'])}} ({{param_list['RATIO']}}\%) \\\bottomrule
 	\end{tabular}
 \end{center}
 
@@ -70,7 +70,7 @@
 
 \begin{table}[!ht]
 	\centering
-	\begin{tabular}{ccccccccccc}
+	\begin{tabular}{lrrrrrrrrrr}
 		Prompt ID & 1 & 2  & 3  & 4  & 5  & 6  & 7  & 8  & 9 & $\geq$10 \\\toprule
 		{% for prompt in range(param_list['NUM_QUESTION']) %}
 			{{prompt}} {% for item in param_list['attempt_counter'][prompt] %} & {{item}} {% endfor %} \\\midrule
@@ -82,7 +82,7 @@
 {% for prompt in range(param_list['NUM_QUESTION'])%}
 \begin{table}[!ht]
 	\centering
-	\begin{tabular}{ccc}
+	\begin{tabular}{lrr}
 		Answer & Number of instances & Percentage (\%) \\\toprule
 		{% for item in param_list['wrong_answers_counter'][prompt]%}
 			\verb|{{item[0]}}| & {{item[1]}} & {{'{:.2f}'.format(item[2]*100)}} \\\midrule
@@ -93,7 +93,7 @@
 
 \begin{table}[!ht]
 	\centering
-	\begin{tabular}{ccc}
+	\begin{tabular}{lrr}
 		Answer & Number of instances & Percentage (\%) \\\toprule
 		{% for item in param_list['first_answers_counter'][prompt]%}
 			\verb|{{item[0]}}| & {{item[1]}} & {{'{:.2f}'.format(item[2]*100)}} \\\midrule
