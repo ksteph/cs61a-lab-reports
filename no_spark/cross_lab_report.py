@@ -94,21 +94,21 @@ heat_map = []
 for student in participation_table:
     student_record = [0] * LAB_NUMBER
     for lab in participation_table[student]:
-        student_record[lab] = 1
+        student_record[lab] = len(participation_table[student]) / float(LAB_NUMBER)
     heat_map.append(student_record)
 for i in reversed(range(LAB_NUMBER)):
     heat_map = sorted(heat_map, key=lambda x: -x[i])
 heat_map = sorted(heat_map, key=lambda x: -toolkit.get_length(x))
 heat_map = np.array(heat_map)
-# print heat_map
 fig, ax = toolkit.prepare_plot(gridWidth=0)
 ax.pcolor(heat_map, cmap=plt.cm.Blues)
 plt.ylim([0, len(selected_data)])
 plt.xticks(np.arange(LAB_NUMBER)+0.5, LABS)
 plt.ylabel("Students")
-b_patch = mpatches.Patch(color=plt.cm.Blues(1.), label='Participated')
-w_patch = mpatches.Patch(color=plt.cm.Blues(0.), label='Not Participated')
-plt.legend(handles=[b_patch, w_patch], loc='center left', bbox_to_anchor=(1, 0.5))
+patches = []
+for i in range(LAB_NUMBER):
+    patches.append(mpatches.Patch(color=plt.cm.Blues((i+1)/float(LAB_NUMBER)), label='{} Labs'.format(i+1)))
+plt.legend(handles=patches)
 plt.savefig('heatmap.png')
 
 
