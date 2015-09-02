@@ -30,8 +30,9 @@ data_set = data.data_set
 ##################################
 ### Initialize latex formatter ###
 ##################################
-formatter = toolkit.LatexFormatter(os.getcwd()+'/../template/')
+formatter = toolkit.LatexFormatter(os.getcwd()+'/../template/', 'report.tex')
 formatter.set_param('name_map', data.name_map)
+formatter.set_param('LAB_NAME', sys.argv[2].upper())
 
 #########################
 ### Basic information ###

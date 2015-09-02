@@ -50,6 +50,18 @@ def get_time_information(item_list):
         tem_max = a_time
     return result
 
+def get_length(item_list):
+    '''
+        Return the number of non-zero elements
+
+        Used to get participation information
+
+        Input: A list of integers
+
+        Output: number of non-zero elements
+    '''
+    return len(filter(lambda x: x!=0, item_list))
+
 def prepare_plot(figsize=(8.5, 4), hideLabels=False, gridColor='#999999', gridWidth=1.0):
     '''
         Template to generate plot figure
@@ -78,10 +90,10 @@ def autolabel(rects, ax, h=2, t="{0}"):
                 ha='center', va='bottom', color="black")
 
 class LatexFormatter(object):
-    def __init__(self, template_path):
+    def __init__(self, template_path, file_name):
         templateLoader = jinja2.FileSystemLoader(searchpath=template_path)
         self.env = jinja2.Environment(loader=templateLoader)
-        self.template = self.env.get_template('report.tex')
+        self.template = self.env.get_template(file_name)
         self.param_list = {}
 
     def set_param(self, key, value):

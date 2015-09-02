@@ -73,6 +73,13 @@ class DataReader(object):
                 Output: dataset after applying map function for each item
             '''
             return DataReader.DataSet([map_func(item) for item in self])
+        def distinct(self):
+            '''
+                Return a distinct element set
+
+                Note: The order will be changed
+            '''
+            return DataReader.DataSet(list(set(self)))
             
     def __init__(self, data_base_directory, lab):
         self.DATA_FILE_PATH = data_base_directory + '/{}.dat'.format(lab)
