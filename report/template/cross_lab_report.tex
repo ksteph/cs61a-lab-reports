@@ -1,0 +1,43 @@
+\documentclass[12pt]{article} % use larger type; default would be 10pt
+\usepackage[margin=1in]{geometry} % to change the page dimensions
+         % otherwise the current date is printed
+%\usepackage{times}
+\usepackage{times}
+\usepackage{fancyhdr}
+\usepackage{xspace}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{verbatim}
+
+\pagestyle{fancy}
+\lhead{Cross Lab Report}
+\rhead{\thepage}
+%\cfoot{}
+
+\begin{document}
+\special{papersize=8.5in,11in}
+\setlength{\pdfpageheight}{\paperheight}
+\setlength{\pdfpagewidth}{\paperwidth}
+\setlength{\parindent}{0pt} %Remove indent of all but first paragraph
+\setlength{\parskip}{2ex} %Add space between paragraphs
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{lab_cnt.png}
+  \caption{Number of other labs participated per lab}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{participation.png}
+  \caption{Number of labs participated per student}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{heatmap.png}
+  \caption{Heatmap for students' participation}
+\end{figure}
+
+\end{document}
