@@ -135,7 +135,7 @@ plt.xlabel('Prompt ID')
 plt.gcf().subplots_adjust(right=0.8)
 plt.legend(p, (x+1 for x in range(10)), loc='center left', bbox_to_anchor=(1, 0.5))
 plt.savefig('attempt_cnt.png')
-formatter.set_param('attempt_counter', attempt_counter)
+formatter.set_param('attempt_counter', np.array(attempt_counter).T)
 
 ########################
 ### Time information ###
@@ -226,8 +226,7 @@ for prompt in range(NUM_QUESTION):
     rects = plt.bar(ind, response_time_counter[prompt], width, color='gray', edgecolor='gray')
     plt.ylabel('#Students')
     plt.xlabel('Time point (min)')
-    plt.ylim([0, 180])
-    plt.xticks([loc+width for loc in ind[:len(ind)-1]], [t/60 for t in RESPONSE_BUCKETS])
+    plt.xticks([loc+width for loc in ind], [t/60 for t in RESPONSE_BUCKETS])
     toolkit.autolabel(rects, ax)
     plt.savefig('response_time_{}'.format(prompt))
 
