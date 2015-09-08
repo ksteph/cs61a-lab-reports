@@ -1,5 +1,6 @@
 import re
 import datetime
+import os
 
 class DataReader(object):
     class DataSet(list):
@@ -80,10 +81,12 @@ class DataReader(object):
                 Note: The order will be changed
             '''
             return DataReader.DataSet(list(set(self)))
-            
+
     def __init__(self, data_base_directory, lab):
-        self.DATA_FILE_PATH = data_base_directory + '/{}.dat'.format(lab)
-        self.MAP_FILE_PATH = data_base_directory + '/{}_caseId_str2numId.map'.format(lab)
+        self.DATA_FILE_PATH = os.path.join(data_base_directory, '{}.dat'.format(lab))
+        self.MAP_FILE_PATH = os.path.join(data_base_directory, '{}_caseId_str2numId.map'.format(lab))
+        self.DATA_BASE_DIRECTORY = data_base_directory
+        self.LAB = lab
         self.data_set = DataReader.DataSet()
         self.sub_map = {}
         self.name_map = {}
@@ -100,6 +103,17 @@ class DataReader(object):
             Input: Map file
         '''
         map_items = []
+        if '{}_order.map'.format(self.LAB) in os.listdir(self.DATA_BASE_DIRECTORY):
+            print 'Ordered map file is used.'
+            with open(os.path.join(self.DATA_BASE_DIRECTORY,'{}_order.map'.format(self.LAB)), 'r') as f_in:
+                for index, line in enumerate(f_in):
+                    tem_result = line[:-2].split('\t')
+                    if index != int(tem_result[0])-1:
+                        print 'ERROR::CASE_ID ORDER IS WRONG!'
+                    self.sub_map[int(tem_result[1])] = index
+                    self.name_map[index] = tem_result[2]
+            return
+
         with open(self.MAP_FILE_PATH, 'r') as f_in:
             for line in f_in:
                 tem_result = line[:len(line)-2].split('\t')
