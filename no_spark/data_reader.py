@@ -94,7 +94,9 @@ class DataReader(object):
         self._sort_map()
         with open(self.DATA_FILE_PATH, 'r') as f_in:
             for line in f_in:
-                self.data_set.append(self._parse(line[:-1]))
+                parsed = self._parse(line[:-1])
+                if parsed:
+                    self.data_set.append(parsed)
 
     def _sort_map(self):
         '''
@@ -148,6 +150,8 @@ class DataReader(object):
             Output: Parsed data
         '''
         parsed_data = data.split('\t')
+        if not self.sub_map.has_key(int(parsed_data[2])):
+            return
         return {'q_time': datetime.datetime.fromtimestamp(int(parsed_data[0])),
                 'a_time': datetime.datetime.fromtimestamp(int(parsed_data[1])),
                 'specifier': self.sub_map[int(parsed_data[2])],
