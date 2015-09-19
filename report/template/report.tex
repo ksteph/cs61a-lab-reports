@@ -82,23 +82,23 @@
 {% for prompt in range(param_list['NUM_QUESTION'])%}
 \begin{table}[!ht]
 	\centering
-	\begin{tabular}{lrr}
+	\begin{tabularx}{\textwidth}{Xrr}
 		Answer & Number of instances & Percentage (\%) \\\toprule
 		{% for item in param_list['wrong_answers_counter'][prompt]%}
 			\verb|{{item[0]}}| & {{item[1]}} & {{'{:.2f}'.format(item[2]*100)}} \\\midrule
 		{% endfor %}
-	\end{tabular}
+	\end{tabularx}
 	\caption{Common wrong answers for Prompt {{prompt}}}
 \end{table}
 
 \begin{table}[!ht]
 	\centering
-	\begin{tabular}{lrr}
+	\begin{tabularx}{\textwidth}{Xrr}
 		Answer & Number of instances & Percentage (\%) \\\toprule
 		{% for item in param_list['first_answers_counter'][prompt]%}
 			\verb|{{item[0]}}| & {{item[1]}} & {{'{:.2f}'.format(item[2]*100)}} \\\midrule
 		{% endfor %}
-	\end{tabular}
+	\end{tabularx}
 	\caption{Common first wrong answers for Prompt {{prompt}}}
 \end{table}
 \clearpage
