@@ -22,7 +22,7 @@ if not os.path.exists('cross_lab_report'):
     os.makedirs('cross_lab_report')
 os.chdir('./cross_lab_report')
 
-LABS = ['lab08', 'lab09']
+LABS = ['lab01', 'lab02', 'lab03']
 LAB_NUMBER = len(LABS)
 ################
 ### Get data ###
@@ -102,7 +102,7 @@ heat_map = sorted(heat_map, key=lambda x: -toolkit.get_length(x))
 heat_map = np.array(heat_map)
 fig, ax = toolkit.prepare_plot(gridWidth=0)
 ax.pcolor(heat_map, cmap=plt.cm.Blues)
-plt.ylim([0, len(selected_data)])
+plt.ylim([0, len(heat_map)])
 plt.xticks(np.arange(LAB_NUMBER)+0.5, LABS)
 plt.ylabel("Students")
 patches = []

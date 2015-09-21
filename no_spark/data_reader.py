@@ -83,6 +83,8 @@ class DataReader(object):
             return DataReader.DataSet(list(set(self)))
 
     def __init__(self, data_base_directory, lab):
+        if lab in os.listdir(data_base_directory):
+            data_base_directory = os.path.join(data_base_directory, lab)
         self.DATA_FILE_PATH = os.path.join(data_base_directory, '{}.dat'.format(lab))
         self.MAP_FILE_PATH = os.path.join(data_base_directory, '{}_caseId_str2numId.map'.format(lab))
         self.DATA_BASE_DIRECTORY = data_base_directory
@@ -107,7 +109,7 @@ class DataReader(object):
         map_items = []
         if '{}_order.map'.format(self.LAB) in os.listdir(self.DATA_BASE_DIRECTORY):
             print 'Ordered map file is used.'
-            with open(os.path.join(self.DATA_BASE_DIRECTORY,'{}_order.map'.format(self.LAB)), 'r') as f_in:
+            with open(os.path.join(self.DATA_BASE_DIRECTORY, '{}_order.map'.format(self.LAB)), 'r') as f_in:
                 for index, line in enumerate(f_in):
                     tem_result = line[:-2].split('\t')
                     if index != int(tem_result[0])-1:
