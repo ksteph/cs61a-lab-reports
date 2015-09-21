@@ -112,8 +112,8 @@ class DataReader(object):
             with open(os.path.join(self.DATA_BASE_DIRECTORY, '{}_order.map'.format(self.LAB)), 'r') as f_in:
                 for index, line in enumerate(f_in):
                     tem_result = line[:-2].split('\t')
-                    if index != int(tem_result[0])-1:
-                        print 'ERROR::CASE_ID ORDER IS WRONG!'
+                    if index != int(tem_result[0])-1 and index != int(tem_result[0]):
+                        print 'ERROR::CASE_ID ORDER MIGHT BE WRONG!'
                     self.sub_map[int(tem_result[1])] = index
                     self.name_map[index] = tem_result[2]
             return

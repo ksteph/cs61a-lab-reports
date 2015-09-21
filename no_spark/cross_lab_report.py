@@ -10,7 +10,7 @@ import toolkit
 
 def usage_information():
     info = 'Lab report generator for CS61a\n'
-    info += 'Usage: cross_lab_report.py <data_file_directory>'
+    info += 'Usage: cross_lab_report.py <data_file_directory> <Lab1> <lab2>...'
     return info
 
 if len(sys.argv) < 2:
@@ -22,7 +22,7 @@ if not os.path.exists('cross_lab_report'):
     os.makedirs('cross_lab_report')
 os.chdir('./cross_lab_report')
 
-LABS = ['lab01', 'lab02', 'lab03']
+LABS = sys.argv[2:]
 LAB_NUMBER = len(LABS)
 ################
 ### Get data ###
